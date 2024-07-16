@@ -36,7 +36,12 @@ h2 {
 
 .btn-smaller {
   font-size: 0.875rem; /* Diminui o tamanho do texto do botão */
-  padding: 0.25rem 0.5rem; /* Ajusta o padding do botão */
+  padding: 0.35rem 0.6rem; /* Ajusta o padding do botão */
+}
+.btn-smaller:hover {
+  background-color: #08be4e;
+  border-color: #08be4e;
+  transition: background-color 0.5s ease, transform 0.5s ease;
 }
 
 /* Media queries for responsive design */

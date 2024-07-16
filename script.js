@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
   contactTypeSelect.addEventListener("change", function () {
     if (this.value === "phone") {
       contactInput.setAttribute("type", "tel");
-      contactInput.setAttribute("pattern", "\\d*");
+      contactInput.removeAttribute("pattern");
       contactInput.setAttribute("maxlength", "15"); // Máximo de 15 caracteres
       contactInput.setAttribute("placeholder", "(XX) XXXXX-XXXX");
       contactInput.removeEventListener("input", formatPhone);
@@ -47,8 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
       input = input.replace(/^(\d{2})(\d)/g, "($1) $2");
       input = input.replace(/(\d{4})(\d)/, "$1-$2");
     } else {
-      input = input.replace(/^(\d{2})(\d)/g, "($1) $2");
-      input = input.replace(/(\d{5})(\d)/, "$1-$2");
+      input = input.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
     }
     event.target.value = input;
   }

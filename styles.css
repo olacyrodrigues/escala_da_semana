@@ -1,6 +1,9 @@
 body {
-  background-color: #f8f9fa;
+  background-color: #f8f8f2;
+  color: #282a36;
   font-family: "Montserrat", sans-serif;
+  background-image: radial-gradient(#ccc 2px, #f8f8f2 2px);
+  background-size: 80px 80px;
 }
 
 h1,

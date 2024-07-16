@@ -120,6 +120,48 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.modal-content {
+  background-color: #44475a; /* Cor de fundo escura para o modal */
+  color: #f8f8f2; /* Cor do texto clara */
+}
+
+.modal-header,
+.modal-footer {
+  border-color: #6272a4; /* Cor das bordas */
+}
+
+.modal-header .close {
+  color: #f8f8f2; /* Cor do botão de fechar */
+}
+
+.form-control {
+  background-color: #282a36; /* Cor de fundo dos inputs */
+  color: #f8f8f2; /* Cor do texto dos inputs */
+  border-color: #6272a4; /* Cor das bordas dos inputs */
+}
+
+.form-control::placeholder {
+  color: #6272a4; /* Cor do placeholder dos inputs */
+}
+
+.form-control:focus {
+  background-color: #282a36; /* Manter a cor de fundo ao focar */
+  color: #f8f8f2; /* Manter a cor do texto ao focar */
+  border-color: #bd93f9; /* Cor das bordas ao focar */
+  box-shadow: none; /* Remover sombra ao focar */
+}
+
+.btn-primary {
+  background-color: #6272a4; /* Cor do botão primário */
+  border-color: #6272a4; /* Cor da borda do botão primário */
+}
+
+.btn-primary:hover {
+  background-color: #bd93f9; /* Cor do botão primário ao passar o mouse */
+  border-color: #bd93f9; /* Cor da borda do botão primário ao passar o mouse */
+}
+
 .modal {
   color: black;
 }
@@ -151,4 +193,8 @@ input:checked + .slider .icon-sun {
 
 input:checked + .slider .icon-moon {
   opacity: 1;
+}
+
+.actions-column {
+  width: 100px; /* Ajuste de largura específico para a coluna de ações */
 }

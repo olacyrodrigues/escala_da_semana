@@ -79,6 +79,20 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  function checkTableActions(day) {
+    const tableId = day === "saturday" ? "#table-saturday" : "#table-sunday";
+    const table = document.querySelector(tableId);
+    const tbody = table.querySelector("tbody");
+    const hasRows = tbody.querySelectorAll("tr").length > 0;
+
+    const actionsColumn = table.querySelector(".actions-column");
+    if (hasRows) {
+      actionsColumn.classList.remove("d-none");
+    } else {
+      actionsColumn.classList.add("d-none");
+    }
+  }
+
   document
     .getElementById("employeeForm")
     .addEventListener("submit", function (event) {
@@ -96,18 +110,20 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const newRow = `
-          <tr>
-              <td>${sector}</td>
-              <td>${employee}</td>
-              <td>${contact}</td>
-              <td>${timeIn} às ${timeOut}</td>
-          </tr>
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>${sector}</td>
+        <td>${employee}</td>
+        <td>${contact}</td>
+        <td>${timeIn} às ${timeOut}</td>
+        <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
       `;
 
       const tableId =
         day === "saturday" ? "#table-saturday tbody" : "#table-sunday tbody";
-      document.querySelector(tableId).insertAdjacentHTML("beforeend", newRow);
+      document.querySelector(tableId).appendChild(newRow);
+
+      checkTableActions(day);
 
       document.getElementById("employeeForm").reset();
       $("#addModal").modal("hide");
@@ -118,6 +134,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   contactTypeSelect.value = "phone";
   contactTypeSelect.dispatchEvent(new Event("change"));
+
+  document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("remove-button")) {
+      const row = event.target.closest("tr");
+      const tableId = row.closest("table").id;
+      row.remove();
+      showToast("Colaborador removido com sucesso!", "success");
+      checkTableActions(tableId === "table-saturday" ? "saturday" : "sunday");
+    }
+  });
 
   // Theme switching logic
   const themeSwitch = document.getElementById("theme-switch");

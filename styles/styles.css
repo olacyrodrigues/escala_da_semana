@@ -146,3 +146,27 @@ input:checked + .slider .icon-moon {
 .actions-column {
   width: 100px; /* Ajuste de largura específico para a coluna de ações */
 }
+
+/* APENAS EXEMPLO, TIRAR ESSE CÓDIGO DPS. DO DARK MODE TAMBÉM*/
+.btn-login {
+  display: inline-block;
+  text-decoration: none;
+  padding: 5.8px 15px;
+  margin: 0 10px;
+  font-size: 15px;
+  background-color: #007bff; /* Cor do botão primário */
+  border-color: #6272a4; /* Cor da borda do botão primário */
+  color: #f8f2f2;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  font-family: "Montserrat", sans-serif;
+}
+
+.btn-login:hover {
+  color: #f8f2f2;
+  background-color: #bd93f9; /* Cor do botão primário ao passar o mouse */
+  border-color: #bd93f9; /* Cor da borda do botão primário ao passar o mouse */
+  text-decoration: none;
+}

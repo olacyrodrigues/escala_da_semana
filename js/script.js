@@ -155,18 +155,33 @@ document.addEventListener("DOMContentLoaded", function () {
   function switchTheme() {
     if (themeSwitch.checked) {
       themeStyle.setAttribute("href", darkTheme);
+      localStorage.setItem("theme", "dark");
     } else {
       themeStyle.setAttribute("href", lightTheme);
+      localStorage.setItem("theme", "light");
     }
   }
 
   themeSwitch.addEventListener("change", switchTheme);
 
+  // Load the saved theme
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    themeSwitch.checked = true;
+    themeStyle.setAttribute("href", darkTheme);
+  } else {
+    themeSwitch.checked = false;
+    themeStyle.setAttribute("href", lightTheme);
+  }
+
+  // Set the initial state of the theme switch based on user preference
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
-  if (prefersDarkScheme) {
-    themeSwitch.checked = true;
-    switchTheme();
+  if (savedTheme === null) {
+    if (prefersDarkScheme) {
+      themeSwitch.checked = true;
+      switchTheme();
+    }
   }
 });

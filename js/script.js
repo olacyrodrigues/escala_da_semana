@@ -93,6 +93,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function saveUser(user) {
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    users.push(user);
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+
   document
     .getElementById("employeeForm")
     .addEventListener("submit", function (event) {
@@ -110,18 +116,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-        <td>${sector}</td>
-        <td>${employee}</td>
-        <td>${contact}</td>
-        <td>${timeIn} às ${timeOut}</td>
-        <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
-      `;
+      const newRow = `
+              <tr>
+                  <td>${sector}</td>
+                  <td>${employee}</td>
+                  <td>${contact}</td>
+                  <td>${timeIn} às ${timeOut}</td>
+                  <td class="actions-column">
+                      <button class="btn btn-danger btn-sm remove-button">Remover</button>
+                  </td>
+              </tr>
+          `;
 
       const tableId =
         day === "saturday" ? "#table-saturday tbody" : "#table-sunday tbody";
-      document.querySelector(tableId).appendChild(newRow);
+      document.querySelector(tableId).insertAdjacentHTML("beforeend", newRow);
+
+      saveUser({ sector, employee, contact, timeIn, timeOut });
 
       checkTableActions(day);
 
@@ -155,33 +166,18 @@ document.addEventListener("DOMContentLoaded", function () {
   function switchTheme() {
     if (themeSwitch.checked) {
       themeStyle.setAttribute("href", darkTheme);
-      localStorage.setItem("theme", "dark");
     } else {
       themeStyle.setAttribute("href", lightTheme);
-      localStorage.setItem("theme", "light");
     }
   }
 
   themeSwitch.addEventListener("change", switchTheme);
 
-  // Load the saved theme
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    themeSwitch.checked = true;
-    themeStyle.setAttribute("href", darkTheme);
-  } else {
-    themeSwitch.checked = false;
-    themeStyle.setAttribute("href", lightTheme);
-  }
-
-  // Set the initial state of the theme switch based on user preference
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
-  if (savedTheme === null) {
-    if (prefersDarkScheme) {
-      themeSwitch.checked = true;
-      switchTheme();
-    }
+  if (prefersDarkScheme) {
+    themeSwitch.checked = true;
+    switchTheme();
   }
 });

@@ -53,9 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Função para verificar ações na tabela
-  function checkTableActions(day) {
-    const tableId = day === "saturday" ? "#table-saturday" : "#table-sunday";
-    const table = document.querySelector(tableId);
+  function checkTableActions() {
+    const table = document.querySelector("#table-week");
     const tbody = table.querySelector("tbody");
     const hasRows = tbody.querySelectorAll("tr").length > 0;
 
@@ -67,14 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Função para calcular e exibir as datas de sábado e domingo
-  function getNextWeekendDates() {
+  // Função para obter as datas da próxima semana
+  function getNextWeekDates() {
     const today = new Date();
-    const nextSaturday = new Date(today);
-    const nextSunday = new Date(today);
-
-    nextSaturday.setDate(today.getDate() + ((6 - today.getDay() + 7) % 7));
-    nextSunday.setDate(nextSaturday.getDate() + 1);
+    const startDate = new Date(today);
+    const endDate = new Date(today);
+    endDate.setDate(startDate.getDate() + (7 - startDate.getDay()));
 
     const options = {
       weekday: "long",
@@ -83,13 +80,15 @@ document.addEventListener("DOMContentLoaded", function () {
       day: "numeric",
     };
 
-    document.getElementById("saturday-date").textContent =
-      nextSaturday.toLocaleDateString("pt-BR", options);
-    document.getElementById("sunday-date").textContent =
-      nextSunday.toLocaleDateString("pt-BR", options);
+    document.getElementById(
+      "week-dates"
+    ).textContent = `${startDate.toLocaleDateString(
+      "pt-BR",
+      options
+    )} até ${endDate.toLocaleDateString("pt-BR", options)}`;
   }
 
-  getNextWeekendDates();
+  getNextWeekDates();
 
   // Manipulador do formulário de adição de usuário
   document
@@ -97,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("submit", function (event) {
       event.preventDefault();
       const user = {
-        day: document.getElementById("day").value,
         sector: document.getElementById("sector").value,
         employee: document.getElementById("employee").value,
         contact: document.getElementById("contact").value,
@@ -116,13 +114,11 @@ document.addEventListener("DOMContentLoaded", function () {
         </tr>
     `;
 
-      const tableId =
-        user.day === "saturday"
-          ? "#table-saturday tbody"
-          : "#table-sunday tbody";
-      document.querySelector(tableId).insertAdjacentHTML("beforeend", newRow);
+      document
+        .querySelector("#table-week tbody")
+        .insertAdjacentHTML("beforeend", newRow);
 
-      checkTableActions(user.day);
+      checkTableActions();
 
       document.getElementById("employeeForm").reset();
       $("#addModal").modal("hide");
@@ -138,8 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
       removeUser(contact);
       row.remove();
       showToast("Colaborador removido com sucesso!", "success");
-      const tableId = row.closest("table").id;
-      checkTableActions(tableId === "table-saturday" ? "saturday" : "sunday");
+      checkTableActions();
     }
   });
 
@@ -147,8 +142,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const themeSwitch = document.getElementById("theme-switch");
   const themeStyle = document.getElementById("theme-style");
 
-  const lightTheme = "./styles/styles.css";
-  const darkTheme = "./styles/dark-mode.css";
+  const lightTheme = "../styles/styles.css";
+  const darkTheme = "../styles/dark-mode.css";
 
   function switchTheme() {
     if (themeSwitch.checked) {
@@ -217,4 +212,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
   contactTypeSelect.value = "phone";
   contactTypeSelect.dispatchEvent(new Event("change"));
+
+  // Carregar usuários da semana
+  function loadWeekUsers() {
+    const users = loadUsers();
+    const tbody = document.querySelector("#table-week tbody");
+    tbody.innerHTML = "";
+
+    users.forEach((user) => {
+      const newRow = `
+        <tr>
+            <td>${user.sector}</td>
+            <td>${user.employee}</td>
+            <td>${user.contact}</td>
+            <td>${user.timeIn} às ${user.timeOut}</td>
+            <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
+        </tr>
+      `;
+      tbody.insertAdjacentHTML("beforeend", newRow);
+    });
+
+    checkTableActions();
+  }
+
+  loadWeekUsers();
 });

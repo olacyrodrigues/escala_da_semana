@@ -20,8 +20,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong">
-      <!-- <a class="navbar-brand" href="#">Escalas da semana</a> -->
-      <a href="./pages/consulta.html">
+      <a href="./consulta.html">
         <img
           src="./assets/logo.png"
           height="auto"
@@ -32,9 +31,7 @@
       <a class="nav-menu-1" href="./pages/manutencao.html"
         >Escala de Manutenção</a
       >
-      <a class="nav-menu-2" href="./pages/operacoes.html"
-        >Escala de Operações</a
-      >
+      <!-- <a class="nav-menu-2" href="./pages/operacoes.html">Escala de Operações</a> -->
       <button
         class="navbar-toggler"
         type="button"
@@ -76,7 +73,7 @@
       <h2 class="text-left mb-4">ESCALA DE APOIO ADM</h2>
 
       <div class="mb-4">
-        <p class="small" id="next-saturday"></p>
+        <p id="saturday-date" class="small"></p>
         <div class="table-responsive">
           <table class="table table-bordered" id="table-saturday">
             <thead>
@@ -86,7 +83,6 @@
                 <th>Contato</th>
                 <th>Horário</th>
                 <th class="actions-column d-none">Ações</th>
-                <!-- Adicionamos a classe d-none -->
               </tr>
             </thead>
             <tbody>
@@ -97,7 +93,7 @@
       </div>
 
       <div>
-        <p class="small" id="next-sunday"></p>
+        <p id="sunday-date" class="small"></p>
         <div class="table-responsive">
           <table class="table table-bordered" id="table-sunday">
             <thead>
@@ -107,7 +103,6 @@
                 <th>Contato</th>
                 <th>Horário</th>
                 <th class="actions-column d-none">Ações</th>
-                <!-- Adicionamos a classe d-none -->
               </tr>
             </thead>
             <tbody>
@@ -148,8 +143,8 @@
                 <label for="day">Dia</label>
                 <select class="form-control" id="day" required>
                   <option value="" disabled selected>Selecione o dia</option>
-                  <option value="Sábado">Sábado</option>
-                  <option value="Domingo">Domingo</option>
+                  <option value="saturday">Sábado</option>
+                  <option value="sunday">Domingo</option>
                 </select>
               </div>
               <div class="form-group">

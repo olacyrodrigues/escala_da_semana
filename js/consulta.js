@@ -1,4 +1,65 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Função para carregar usuários do localStorage
+  function loadUsers() {
+    const users = localStorage.getItem("users");
+    return users ? JSON.parse(users) : [];
+  }
+
+  // Função para exibir usuários na tabela
+  function displayUsers(users) {
+    const usersTable = document.getElementById("users-table");
+    if (users.length === 0) {
+      usersTable.innerHTML = "<p>Nenhum usuário registrado.</p>";
+      return;
+    }
+    usersTable.innerHTML = `
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Setor</th>
+            <th>Escalado</th>
+            <th>Contato</th>
+            <th>Horário</th>
+            <th>Dia</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users
+            .map(
+              (user) => `
+            <tr>
+              <td>${user.sector}</td>
+              <td>${user.employee}</td>
+              <td>${user.contact}</td>
+              <td>${user.timeIn} às ${user.timeOut}</td>
+              <td>${user.day}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  // Carregar e exibir os usuários
+  const users = loadUsers();
+  displayUsers(users);
+
+  // Função para limpar usuários do localStorage
+  function clearUsers() {
+    localStorage.removeItem("users");
+    displayUsers([]);
+  }
+
+  // Adicionar evento de clique ao botão de limpar usuários
+  document.getElementById("clear-users").addEventListener("click", function () {
+    if (confirm("Tem certeza de que deseja limpar todos os usuários?")) {
+      clearUsers();
+    }
+  });
+
+  // Theme switching logic
   const themeSwitch = document.getElementById("theme-switch");
   const themeStyle = document.getElementById("theme-style");
 
@@ -37,46 +98,4 @@ document.addEventListener("DOMContentLoaded", function () {
       switchTheme();
     }
   }
-
-  function loadUsers() {
-    const usersTable = document.getElementById("users-table");
-
-    // Retrieve users from localStorage
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    if (users.length === 0) {
-      usersTable.innerHTML = "<p>Nenhum usuário registrado.</p>";
-      return;
-    }
-
-    const table = document.createElement("table");
-    table.classList.add("table", "table-bordered");
-    table.innerHTML = `
-          <thead>
-              <tr>
-                  <th>Setor</th>
-                  <th>Escalado</th>
-                  <th>Contato</th>
-                  <th>Horário</th>
-              </tr>
-          </thead>
-          <tbody>
-              ${users
-                .map(
-                  (user) => `
-                  <tr>
-                      <td>${user.sector}</td>
-                      <td>${user.employee}</td>
-                      <td>${user.contact}</td>
-                      <td>${user.timeIn} às ${user.timeOut}</td>
-                  </tr>
-              `
-                )
-                .join("")}
-          </tbody>
-      `;
-    usersTable.appendChild(table);
-  }
-
-  loadUsers();
 });

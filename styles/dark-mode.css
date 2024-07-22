@@ -6,6 +6,21 @@ body {
   background-size: 80px 80px;
 }
 
+a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 5.8px 3px;
+  margin: 0 2px;
+  color: #f4f0f0;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+}
+a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
 h1,
 h2 {
   color: #bd93f9;

@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
             <th>Setor</th>
             <th>Escalado</th>
             <th>Contato</th>
-            <th>Horário</th>
             <th>Dia</th>
+            <th>Horário</th>
           </tr>
         </thead>
         <tbody>
@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
               <td>${user.sector}</td>
               <td>${user.employee}</td>
               <td>${user.contact}</td>
-              <td>${user.timeIn} às ${user.timeOut}</td>
               <td>${user.day}</td>
+               <td>${user.timeIn} às ${user.timeOut}</td>
             </tr>
           `
             )

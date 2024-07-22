@@ -66,14 +66,13 @@
     </nav>
     <div class="container mt-5">
       <h2 class="text-left mb-4">ESCALA DE APOIO MANUTENÇÃO</h2>
-
       <div class="mb-4">
         <p class="small" id="week-dates"></p>
         <div class="table-responsive">
           <table class="table table-bordered" id="table-week">
             <thead>
               <tr>
-                <th>Setor</th>
+                <th>Cargo</th>
                 <th>Escalado</th>
                 <th>Contato</th>
                 <th>Horário</th>
@@ -115,10 +114,13 @@
           <div class="modal-body">
             <form id="employeeForm">
               <div class="form-group">
-                <label for="sector">Setor</label>
+                <label for="sector">Cargo</label>
                 <select class="form-control" id="sector" required>
-                  <option value="" disabled selected>Selecione o setor</option>
-                  <option value="Manutenção">Manutenção</option>
+                  <option value="" disabled selected>Cargo</option>
+                  <option value="Superior Manutenção">
+                    Superior Manutenção
+                  </option>
+                  <option value="Técnico Manutenção">Técnico Manutenção</option>
                 </select>
               </div>
               <div class="form-group">

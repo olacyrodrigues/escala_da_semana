@@ -5,6 +5,15 @@ document.addEventListener("DOMContentLoaded", function () {
     return users ? JSON.parse(users) : [];
   }
 
+  // Função para traduzir os dias da semana
+  function translateDay(day) {
+    const days = {
+      saturday: "Sábado",
+      sunday: "Domingo",
+    };
+    return days[day] || day;
+  }
+
   // Função para exibir usuários na tabela
   function displayUsers(users) {
     const usersTable = document.getElementById("users-table");
@@ -19,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <th>Setor</th>
             <th>Escalado</th>
             <th>Contato</th>
-            <th>Dia</th>
+            <th>Semana</th>
             <th>Horário</th>
           </tr>
         </thead>
@@ -31,8 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
               <td>${user.sector}</td>
               <td>${user.employee}</td>
               <td>${user.contact}</td>
-              <td>${user.day}</td>
-               <td>${user.timeIn} às ${user.timeOut}</td>
+              <td>${translateDay(user.day)}</td>
+              <td>${user.timeIn} às ${user.timeOut}</td>
             </tr>
           `
             )

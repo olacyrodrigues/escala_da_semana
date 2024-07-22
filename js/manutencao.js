@@ -74,21 +74,21 @@ document.addEventListener("DOMContentLoaded", function () {
     endDate.setDate(startDate.getDate() + (7 - startDate.getDay()));
 
     const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
     };
 
-    document.getElementById(
-      "week-dates"
-    ).textContent = `${startDate.toLocaleDateString(
+    const weekDates = `${startDate.toLocaleDateString(
       "pt-BR",
       options
     )} até ${endDate.toLocaleDateString("pt-BR", options)}`;
+
+    document.getElementById("week-dates").textContent = weekDates;
+    return weekDates;
   }
 
-  getNextWeekDates();
+  const currentWeek = getNextWeekDates();
 
   // Manipulador do formulário de adição de usuário
   document
@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
         contact: document.getElementById("contact").value,
         timeIn: document.getElementById("time-in").value,
         timeOut: document.getElementById("time-out").value,
+        day: currentWeek,
       };
       addUser(user);
 
@@ -212,28 +213,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   contactTypeSelect.value = "phone";
   contactTypeSelect.dispatchEvent(new Event("change"));
-
-  // Carregar usuários da semana
-  function loadWeekUsers() {
-    const users = loadUsers();
-    const tbody = document.querySelector("#table-week tbody");
-    tbody.innerHTML = "";
-
-    users.forEach((user) => {
-      const newRow = `
-        <tr>
-            <td>${user.sector}</td>
-            <td>${user.employee}</td>
-            <td>${user.contact}</td>
-            <td>${user.timeIn} às ${user.timeOut}</td>
-            <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
-        </tr>
-      `;
-      tbody.insertAdjacentHTML("beforeend", newRow);
-    });
-
-    checkTableActions();
-  }
-
-  loadWeekUsers();
 });

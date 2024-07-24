@@ -147,8 +147,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const themeSwitch = document.getElementById("theme-switch");
   const themeStyle = document.getElementById("theme-style");
 
-  const lightTheme = "./styles/styles.css";
-  const darkTheme = "./styles/dark-mode.css";
+  const lightTheme = "../styles/styles.css";
+  const darkTheme = "../styles/dark-mode.css";
 
   function switchTheme() {
     if (themeSwitch.checked) {

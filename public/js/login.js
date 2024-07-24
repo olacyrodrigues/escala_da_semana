@@ -1,36 +1,9 @@
-document
-  .getElementById("loginForm")
-  .addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    const response = await fetch("http://localhost:3000/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      showToast("Login bem-sucedido!", "success");
-    } else {
-      showToast(data.error, "error");
-    }
-  });
-
-//sssssssssssssssssssssssssssssssss
-
 document.addEventListener("DOMContentLoaded", function () {
   const themeSwitch = document.getElementById("theme-switch");
   const themeStyle = document.getElementById("theme-style");
 
-  const lightTheme = "../styles/login.css";
-  const darkTheme = "../styles/login-dark-mode.css";
+  const lightTheme = "/styles/login.css";
+  const darkTheme = "/styles/login-dark-mode.css";
 
   function switchTheme() {
     if (themeSwitch.checked) {
@@ -67,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document
     .getElementById("loginForm")
-    .addEventListener("submit", function (event) {
+    .addEventListener("submit", async function (event) {
       event.preventDefault();
 
       const username = document.getElementById("username").value;
@@ -78,27 +51,28 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      if (document.getElementById("rememberMe").checked) {
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
-        localStorage.setItem("rememberMe", "true");
-      } else {
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
-        localStorage.removeItem("rememberMe");
+      try {
+        const response = await fetch("/api/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (response.ok) {
+          showToast("Login bem-sucedido!", "success");
+          setTimeout(() => {
+            window.location.href = "/admin";
+          }, 1000);
+        } else {
+          const result = await response.json();
+          showToast(result.message, "error");
+        }
+      } catch (error) {
+        showToast("Erro ao fazer login. Tente novamente.", "error");
       }
-
-      showToast("Login bem-sucedido!", "success");
     });
-
-  // Load saved credentials if rememberMe is checked
-  if (localStorage.getItem("rememberMe") === "true") {
-    document.getElementById("username").value =
-      localStorage.getItem("username");
-    document.getElementById("password").value =
-      localStorage.getItem("password");
-    document.getElementById("rememberMe").checked = true;
-  }
 
   function showToast(message, type = "success") {
     const toastContainer =

@@ -14,6 +14,7 @@ exports.authenticate = async (req, res) => {
       return res.status(401).json({ message: "Credenciais inválidas." });
     }
 
+    req.session.user = user; // Armazena o usuário na sessão
     res.status(200).json({ message: "Login bem-sucedido!" });
   } catch (error) {
     res.status(500).json({ message: "Erro no servidor." });
@@ -85,4 +86,16 @@ exports.getAllUsers = async (req, res) => {
       .status(500)
       .json({ message: "Erro ao buscar usuários.", error: error.message });
   }
+};
+
+exports.logout = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Erro ao fazer logout.", error: err.message });
+    } else {
+      res.status(200).json({ message: "Logout bem-sucedido!" });
+    }
+  });
 };

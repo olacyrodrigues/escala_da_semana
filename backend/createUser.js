@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("./models/user");
+const User = require(".backend/models/user");
 const sequelize = require("./models");
 
 async function createUser() {

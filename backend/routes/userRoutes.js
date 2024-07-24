@@ -6,6 +6,7 @@ router.post("/login", userController.authenticate);
 router.post("/create", userController.createUser);
 router.put("/update", userController.updateUser);
 router.delete("/delete", userController.deleteUser);
-router.get("/all", userController.getAllUsers); // Nova rota para obter todos os usuários
+router.get("/all", userController.getAllUsers);
+router.post("/logout", userController.logout);
 
 module.exports = router;

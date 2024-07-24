@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const themeSwitch = document.getElementById("theme-switch");
   const themeStyle = document.getElementById("theme-style");
 
-  const lightTheme = "/styles/login.css";
-  const darkTheme = "/styles/login-dark-mode.css";
+  const lightTheme = "../styles/login.css";
+  const darkTheme = "../styles/login-dark-mode.css";
 
   function switchTheme() {
     if (themeSwitch.checked) {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document
     .getElementById("loginForm")
-    .addEventListener("submit", async function (event) {
+    .addEventListener("submit", function (event) {
       event.preventDefault();
 
       const username = document.getElementById("username").value;
@@ -51,28 +51,47 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      try {
-        const response = await fetch("/api/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        });
-
-        if (response.ok) {
-          showToast("Login bem-sucedido!", "success");
-          setTimeout(() => {
-            window.location.href = "/admin";
-          }, 1000);
-        } else {
-          const result = await response.json();
-          showToast(result.message, "error");
-        }
-      } catch (error) {
-        showToast("Erro ao fazer login. Tente novamente.", "error");
+      if (document.getElementById("rememberMe").checked) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+        localStorage.setItem("rememberMe", "true");
+      } else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        localStorage.removeItem("rememberMe");
       }
+
+      // Fazer login via API
+      fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message === "Login bem-sucedido!") {
+            showToast("Login bem-sucedido!", "success");
+            window.location.href = "/admin"; // Redirecionar para a página admin
+          } else {
+            showToast(data.message, "error");
+          }
+        })
+        .catch((error) => {
+          console.error("Erro:", error);
+          showToast("Erro ao fazer login.", "error");
+        });
     });
+
+  // Load saved credentials if rememberMe is checked
+  if (localStorage.getItem("rememberMe") === "true") {
+    document.getElementById("username").value =
+      localStorage.getItem("username");
+    document.getElementById("password").value =
+      localStorage.getItem("password");
+    document.getElementById("rememberMe").checked = true;
+  }
 
   function showToast(message, type = "success") {
     const toastContainer =

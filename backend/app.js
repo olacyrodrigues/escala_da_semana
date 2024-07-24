@@ -42,8 +42,8 @@ app.get("/", (req, res) => {
 });
 
 // Rotas para servir os arquivos HTML
-app.get("/admin", authMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/pages/admin.html"));
+app.get("/administrativo", authMiddleware, (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/pages/administrativo.html"));
 });
 
 app.get("/index", (req, res) => {

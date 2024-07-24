@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           if (data.message === "Login bem-sucedido!") {
             showToast("Login bem-sucedido!", "success");
-            window.location.href = "/admin"; // Redirecionar para a página admin
+            window.location.href = "/administrativo"; // Redirecionar para a página admin
           } else {
             showToast(data.message, "error");
           }

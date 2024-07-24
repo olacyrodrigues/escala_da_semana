@@ -1,0 +1,239 @@
+body {
+  background-color: #282a36 !important;
+  color: #f8f2f2 !important;
+  font-family: "Montserrat", sans-serif !important;
+  background-image: radial-gradient(#44475a 2px, #282a36 2px) !important;
+  background-size: 80px 80px !important;
+}
+
+a {
+  display: inline-block !important;
+  text-decoration: none !important;
+  padding: 5.8px 3px !important;
+  margin: 0 2px !important;
+  color: #f4f0f0 !important;
+  text-align: center !important;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 1.1rem !important;
+}
+a:hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+h1,
+h2 {
+  color: #bd93f9 !important;
+  margin-top: 20px !important;
+}
+
+h2 {
+  text-transform: uppercase !important;
+  text-align: left !important;
+}
+
+.table {
+  margin-bottom: 30px !important;
+}
+
+.table th,
+.table td {
+  border-color: #6272a4 !important;
+  color: #f8f8f2 !important;
+}
+
+.small {
+  font-weight: normal !important;
+  font-size: 0.9rem !important;
+}
+
+.modal-dialog {
+  max-width: 500px !important;
+}
+
+.font-weight-bold {
+  font-weight: bold !important;
+}
+
+.navbar {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; /* Adiciona sombra à navbar */
+}
+
+.btn-smaller {
+  font-size: 0.875rem !important; /* Diminui o tamanho do texto do botão */
+  padding: 0.35rem 0.6rem !important; /* Ajusta o padding do botão */
+}
+.btn-smaller:hover {
+  background-color: #08be4e !important;
+  border-color: #08be4e !important;
+  transition: background-color 0.5s ease, transform 0.5s ease !important;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 90% !important;
+  }
+  .table-responsive {
+    overflow-x: auto !important;
+  }
+}
+
+.toast {
+  min-width: 250px !important;
+}
+
+/* Estilos para o switch */
+.switch {
+  position: relative !important;
+  display: inline-block !important;
+  width: 60px !important;
+  height: 34px !important;
+  margin-left: 1rem !important;
+}
+
+.switch input {
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.slider {
+  position: absolute !important;
+  cursor: pointer !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: #ccc !important;
+  transition: 0.4s !important;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px !important;
+  width: 26px !important;
+  left: 4px !important;
+  bottom: 4px !important;
+  background-color: white !important;
+  transition: 0.4s !important;
+}
+
+input:checked + .slider {
+  background-color: #2196f3 !important;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px) !important;
+}
+
+.slider.round {
+  border-radius: 34px !important;
+}
+
+.slider.round:before {
+  border-radius: 50% !important;
+}
+
+.modal-content {
+  background-color: #44475a !important; /* Cor de fundo escura para o modal */
+  color: #f8f8f2 !important; /* Cor do texto clara */
+}
+
+.modal-header,
+.modal-footer {
+  border-color: #6272a4 !important; /* Cor das bordas */
+}
+
+.modal-header .close {
+  color: #f8f8f2 !important; /* Cor do botão de fechar */
+}
+
+.form-control {
+  background-color: #282a36 !important; /* Cor de fundo dos inputs */
+  color: #f8f8f2 !important; /* Cor do texto dos inputs */
+  border-color: #6272a4 !important; /* Cor das bordas dos inputs */
+}
+
+.form-control::placeholder {
+  color: #6272a4 !important; /* Cor do placeholder dos inputs */
+}
+
+.form-control:focus {
+  background-color: #282a36 !important; /* Manter a cor de fundo ao focar */
+  color: #f8f8f2 !important; /* Manter a cor do texto ao focar */
+  border-color: #bd93f9 !important; /* Cor das bordas ao focar */
+  box-shadow: none !important; /* Remover sombra ao focar */
+}
+
+.btn-primary {
+  background-color: #6272a4 !important; /* Cor do botão primário */
+  border-color: #6272a4 !important; /* Cor da borda do botão primário */
+}
+
+.btn-primary:hover {
+  background-color: #bd93f9 !important; /* Cor do botão primário ao passar o mouse */
+  border-color: #bd93f9 !important; /* Cor da borda do botão primário ao passar o mouse */
+}
+
+.modal {
+  color: black !important;
+}
+
+/* Ícones */
+.icon-sun,
+.icon-moon {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 16px !important;
+  transition: opacity 0.4s !important;
+}
+
+.icon-sun {
+  left: 8px !important;
+  color: #ffdf00 !important;
+}
+
+.icon-moon {
+  right: 8px !important;
+  color: #000000 !important;
+  opacity: 0 !important;
+}
+
+input:checked + .slider .icon-sun {
+  opacity: 0 !important;
+}
+
+input:checked + .slider .icon-moon {
+  opacity: 1 !important;
+}
+
+.actions-column {
+  width: 100px !important; /* Ajuste de largura específico para a coluna de ações */
+}
+
+/*APENAS UM EXEMPLO TIRAR ESSE CÓDIGO DPS. DO LIGHT MODE TAMBÉM*/
+.btn-login {
+  display: inline-block !important;
+  text-decoration: none !important;
+  padding: 5.8px 15px !important;
+  margin: 0 10px !important;
+  font-size: 15px !important;
+  background-color: #6272a4 !important; /* Cor do botão primário */
+  border-color: #6272a4 !important; /* Cor da borda do botão primário */
+  color: #f8f2f2 !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  border-radius: 5px !important;
+  transition: background-color 0.3s !important;
+  font-family: "Montserrat", sans-serif !important;
+}
+
+.btn-login:hover {
+  color: #f8f2f2 !important;
+  background-color: #bd93f9 !important; /* Cor do botão primário ao passar o mouse */
+  border-color: #bd93f9 !important; /* Cor da borda do botão primário ao passar o mouse */
+  text-decoration: none !important;
+}

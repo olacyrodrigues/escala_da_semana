@@ -1,18 +1,14 @@
-async function loadCollaborators() {
-  const response = await fetch("http://localhost:3000/api/collaborators");
-  const collaborators = await response.json();
-  displayUsers(collaborators);
-}
-
-loadCollaborators();
-
-//-------------------------------------------
-
 document.addEventListener("DOMContentLoaded", function () {
-  // Função para carregar usuários do localStorage
-  function loadUsers() {
-    const users = localStorage.getItem("users");
-    return users ? JSON.parse(users) : [];
+  // Carregar colaboradores ao carregar a página
+  function loadCollaborators() {
+    fetch("/api/collaborators/all")
+      .then((response) => response.json())
+      .then((data) => {
+        displayUsers(data);
+      })
+      .catch((error) =>
+        console.error("Erro ao carregar colaboradores:", error)
+      );
   }
 
   // Função para traduzir os dias da semana
@@ -24,11 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
     return days[day] || day;
   }
 
-  // Função para exibir usuários na tabela
+  // Função para exibir colaboradores na tabela
   function displayUsers(users) {
     const usersTable = document.getElementById("users-table");
     if (users.length === 0) {
-      usersTable.innerHTML = "<p>Nenhum usuário registrado.</p>";
+      usersTable.innerHTML = "<p>Nenhum colaborador registrado.</p>";
       return;
     }
     usersTable.innerHTML = `
@@ -50,7 +46,11 @@ document.addEventListener("DOMContentLoaded", function () {
               <td>${user.sector}</td>
               <td>${user.employee}</td>
               <td>${user.contact}</td>
-              <td>${translateDay(user.day)}</td>
+              <td>${
+                user.day === "week"
+                  ? `De ${getWeekDates()}`
+                  : translateDay(user.day)
+              }</td>
               <td>${user.timeIn} às ${user.timeOut}</td>
             </tr>
           `
@@ -61,22 +61,24 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   }
 
-  // Carregar e exibir os usuários
-  const users = loadUsers();
-  displayUsers(users);
+  // Função para calcular as datas de início e fim da semana
+  function getWeekDates() {
+    const today = new Date();
+    const startDate = new Date(today);
+    const endDate = new Date(today);
 
-  // Função para limpar usuários do localStorage
-  function clearUsers() {
-    localStorage.removeItem("users");
-    displayUsers([]);
+    startDate.setDate(today.getDate() - today.getDay() + 1); // Set to the start of the week (Monday)
+    endDate.setDate(startDate.getDate() + 6); // Set to the end of the week (Sunday)
+
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const startDateString = startDate.toLocaleDateString("pt-BR", options);
+    const endDateString = endDate.toLocaleDateString("pt-BR", options);
+
+    return `${startDateString} até ${endDateString}`;
   }
 
-  // Adicionar evento de clique ao botão de limpar usuários
-  document.getElementById("clear-users").addEventListener("click", function () {
-    if (confirm("Tem certeza de que deseja limpar todos os usuários?")) {
-      clearUsers();
-    }
-  });
+  // Carregar e exibir os colaboradores
+  loadCollaborators();
 
   // Theme switching logic
   const themeSwitch = document.getElementById("theme-switch");

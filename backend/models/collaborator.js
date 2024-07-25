@@ -1,6 +1,5 @@
-// models/Collaborator.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("./index");
+const sequelize = require("../database");
 
 const Collaborator = sequelize.define("Collaborator", {
   sector: {
@@ -26,6 +25,10 @@ const Collaborator = sequelize.define("Collaborator", {
   day: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
 });
 

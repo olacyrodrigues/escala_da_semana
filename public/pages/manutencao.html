@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles/styles.css" id="theme-style" />
+    <link rel="stylesheet" href="../styles/styles.css" id="theme-style" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -20,16 +20,16 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong">
-      <a href="/index">
+      <a href="./index">
         <img
-          src="/assets/logo.png"
+          src="../assets/logo.png"
           height="auto"
           width="150"
           alt=""
           class="logo-barcelos"
         />
       </a>
-      <a class="nav-menu-1" href="/administrativo">Escala Administrativo</a>
+      <a class="nav-menu-1" href="./administrativo">Escala Administrativo</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -66,8 +66,8 @@
     </nav>
     <div class="container mt-5">
       <h2 class="text-left mb-4">ESCALA DE APOIO MANUTENÇÃO</h2>
+      <p id="week-dates" class="mb-4"></p>
       <div class="mb-4">
-        <p class="small" id="week-dates"></p>
         <div class="table-responsive">
           <table class="table table-bordered" id="table-week">
             <thead>
@@ -141,7 +141,13 @@
               </div>
               <div class="form-group">
                 <label for="contact">Contato</label>
-                <input type="text" class="form-control" id="contact" required />
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contact"
+                  maxlength="15"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="time-in">Horário</label>
@@ -183,13 +189,13 @@
         id="toast-container"
         style="position: absolute; top: 1rem; right: 1rem"
       >
-        <!-- Toasts serão adicionados aqui -->
+        <!-- Toasts serão adicionadas aqui -->
       </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="/js/manutencao.js"></script>
+    <script src="../js/manutencao.js"></script>
   </body>
 </html>

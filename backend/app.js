@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const session = require("express-session");
-const sequelize = require("./models");
+const sequelize = require("./database"); // Certifique-se de usar o caminho correto aqui
 const userRoutes = require("./routes/userRoutes");
 const collaboratorRoutes = require("./routes/collaboratorRoutes");
 
@@ -11,7 +11,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
-app.use(express.static(path.join(__dirname, "../assets")));
 
 // Configurar sessão
 app.use(

@@ -1,109 +1,6 @@
-document
-  .getElementById("employeeForm")
-  .addEventListener("submit", async function (event) {
-    event.preventDefault();
-    const user = {
-      sector: document.getElementById("sector").value,
-      employee: document.getElementById("employee").value,
-      contact: document.getElementById("contact").value,
-      timeIn: document.getElementById("time-in").value,
-      timeOut: document.getElementById("time-out").value,
-      day: document.getElementById("day")
-        ? document.getElementById("day").value
-        : currentWeek,
-    };
-
-    const response = await fetch("http://localhost:3000/api/collaborators", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      addUserToTable(user);
-      showToast("Colaborador adicionado com sucesso!", "success");
-    } else {
-      showToast(data.error, "error");
-    }
-  });
-
-// ssssssssssssssssssssssssssssssss
-
 document.addEventListener("DOMContentLoaded", function () {
-  // Função para salvar usuários no localStorage
-  function saveUsers(users) {
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-
-  // Função para carregar usuários do localStorage
-  function loadUsers() {
-    const users = localStorage.getItem("users");
-    return users ? JSON.parse(users) : [];
-  }
-
-  // Função para adicionar um usuário
-  function addUser(user) {
-    const users = loadUsers();
-    users.push(user);
-    saveUsers(users);
-  }
-
-  // Função para remover um usuário
-  function removeUser(contact) {
-    let users = loadUsers();
-    users = users.filter((user) => user.contact !== contact);
-    saveUsers(users);
-  }
-
-  // Função para mostrar notificação
-  function showToast(message, type = "success") {
-    const toastContainer = document.getElementById("toast-container");
-    const toastId = `toast-${Date.now()}`;
-    const toastHTML = `
-          <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
-              <div class="toast-header">
-                  <strong class="mr-auto">Notificação</strong>
-                  <small class="text-muted">Agora</small>
-                  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="toast-body ${
-                type === "success" ? "text-success" : "text-danger"
-              }">
-                  ${message}
-              </div>
-          </div>
-      `;
-    toastContainer.insertAdjacentHTML("beforeend", toastHTML);
-    $(`#${toastId}`)
-      .toast("show")
-      .on("hidden.bs.toast", function () {
-        $(this).remove();
-      });
-  }
-
-  // Função para verificar ações na tabela
-  function checkTableActions(day) {
-    const tableId = day === "saturday" ? "#table-saturday" : "#table-sunday";
-    const table = document.querySelector(tableId);
-    const tbody = table.querySelector("tbody");
-    const hasRows = tbody.querySelectorAll("tr").length > 0;
-
-    const actionsColumn = table.querySelector(".actions-column");
-    if (hasRows) {
-      actionsColumn.classList.remove("d-none");
-    } else {
-      actionsColumn.classList.add("d-none");
-    }
-  }
-
-  // Função para calcular e exibir as datas de sábado e domingo
-  function getNextWeekendDates() {
+  // Função para calcular as datas de sábado e domingo
+  function getWeekendDates() {
     const today = new Date();
     const nextSaturday = new Date(today);
     const nextSunday = new Date(today);
@@ -113,70 +10,183 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const options = {
       weekday: "long",
+      day: "2-digit",
+      month: "2-digit",
       year: "numeric",
-      month: "long",
-      day: "numeric",
     };
+    const saturdayDateString = nextSaturday.toLocaleDateString(
+      "pt-BR",
+      options
+    );
+    const sundayDateString = nextSunday.toLocaleDateString("pt-BR", options);
 
-    document.getElementById("saturday-date").textContent =
-      nextSaturday.toLocaleDateString("pt-BR", options);
-    document.getElementById("sunday-date").textContent =
-      nextSunday.toLocaleDateString("pt-BR", options);
+    document.getElementById(
+      "saturday-date"
+    ).textContent = ` ${saturdayDateString}`;
+    document.getElementById("sunday-date").textContent = ` ${sundayDateString}`;
   }
 
-  getNextWeekendDates();
+  // Carregar colaboradores ao carregar a página
+  function loadCollaborators() {
+    fetch("/api/collaborators/all")
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((user) => {
+          const newRow = `
+            <tr data-id="${user.id}">
+              <td>${user.sector}</td>
+              <td>${user.employee}</td>
+              <td>${user.contact}</td>
+              <td>${user.timeIn} às ${user.timeOut}</td>
+              <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
+            </tr>
+          `;
+          const tableId =
+            user.day === "saturday"
+              ? "#table-saturday tbody"
+              : "#table-sunday tbody";
+          document
+            .querySelector(tableId)
+            .insertAdjacentHTML("beforeend", newRow);
+        });
+        checkTableActions("saturday");
+        checkTableActions("sunday");
+      })
+      .catch((error) =>
+        console.error("Erro ao carregar colaboradores:", error)
+      );
+  }
 
-  // Manipulador do formulário de adição de usuário
+  // Função para salvar colaborador
+  function addCollaborator(user) {
+    fetch("/api/collaborators/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => response.json())
+      .then((newUser) => {
+        const newRow = `
+        <tr data-id="${newUser.id}">
+          <td>${newUser.sector}</td>
+          <td>${newUser.employee}</td>
+          <td>${newUser.contact}</td>
+          <td>${newUser.timeIn} às ${newUser.timeOut}</td>
+          <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
+        </tr>
+      `;
+        const tableId =
+          newUser.day === "saturday"
+            ? "#table-saturday tbody"
+            : "#table-sunday tbody";
+        document.querySelector(tableId).insertAdjacentHTML("beforeend", newRow);
+        checkTableActions(newUser.day);
+      })
+      .catch((error) => console.error("Erro ao adicionar colaborador:", error));
+  }
+
+  // Função para remover colaborador
+  function removeCollaborator(id) {
+    fetch(`/api/collaborators/delete/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        if (row) {
+          row.remove();
+          checkTableActions(
+            row.closest("table").id === "table-saturday" ? "saturday" : "sunday"
+          );
+        }
+      })
+      .catch((error) => console.error("Erro ao remover colaborador:", error));
+  }
+
+  // Função para formatar telefone
+  function formatPhone(event) {
+    let input = event.target.value.replace(/\D/g, "").substring(0, 11);
+    if (input.length <= 10) {
+      input = input.replace(/^(\d{2})(\d)/g, "($1) $2");
+      input = input.replace(/(\d{4})(\d)/, "$1-$2");
+    } else {
+      input = input.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, "($1) $2 $3-$4");
+    }
+    event.target.value = input;
+  }
+
+  // Função para validar e-mail
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  // Inicialização do formulário de adição de colaborador
+  const contactTypeSelect = document.getElementById("contact-type");
+  const contactInput = document.getElementById("contact");
+
   document
     .getElementById("employeeForm")
     .addEventListener("submit", function (event) {
       event.preventDefault();
+      const contactType = contactTypeSelect.value;
+      const contactInputValue = contactInput.value;
+
+      if (contactType === "email" && !validateEmail(contactInputValue)) {
+        alert("Por favor, insira um e-mail válido.");
+        return;
+      }
+
       const user = {
-        day: document.getElementById("day").value,
         sector: document.getElementById("sector").value,
         employee: document.getElementById("employee").value,
-        contact: document.getElementById("contact").value,
+        contact: contactInputValue,
         timeIn: document.getElementById("time-in").value,
         timeOut: document.getElementById("time-out").value,
+        day: document.getElementById("day").value,
       };
-      addUser(user);
-
-      const newRow = `
-        <tr>
-            <td>${user.sector}</td>
-            <td>${user.employee}</td>
-            <td>${user.contact}</td>
-            <td>${user.timeIn} às ${user.timeOut}</td>
-            <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
-        </tr>
-    `;
-
-      const tableId =
-        user.day === "saturday"
-          ? "#table-saturday tbody"
-          : "#table-sunday tbody";
-      document.querySelector(tableId).insertAdjacentHTML("beforeend", newRow);
-
-      checkTableActions(user.day);
-
+      addCollaborator(user);
       document.getElementById("employeeForm").reset();
       $("#addModal").modal("hide");
-
-      showToast("Colaborador adicionado com sucesso!", "success");
     });
 
-  // Manipulador para remover usuário
-  document.addEventListener("click", function (event) {
-    if (event.target.classList.contains("remove-button")) {
-      const row = event.target.closest("tr");
-      const contact = row.querySelector("td:nth-child(3)").textContent;
-      removeUser(contact);
-      row.remove();
-      showToast("Colaborador removido com sucesso!", "success");
-      const tableId = row.closest("table").id;
-      checkTableActions(tableId === "table-saturday" ? "saturday" : "sunday");
+  // Adicionar evento de input para formatar telefone
+  contactInput.addEventListener("input", formatPhone);
+
+  // Change handler for contact type
+  contactTypeSelect.addEventListener("change", function () {
+    if (this.value === "phone") {
+      contactInput.setAttribute("type", "tel");
+      contactInput.removeAttribute("pattern");
+      contactInput.setAttribute("maxlength", "15");
+      contactInput.setAttribute("placeholder", "(XX) X XXXX-XXXX");
+      contactInput.removeEventListener("input", formatPhone);
+      contactInput.addEventListener("input", formatPhone);
+    } else {
+      contactInput.setAttribute("type", "email");
+      contactInput.removeAttribute("pattern");
+      contactInput.removeAttribute("maxlength");
+      contactInput.setAttribute("placeholder", "email@barceloscia.com.br");
+      contactInput.removeEventListener("input", formatPhone);
     }
   });
+
+  // Set the initial state for phone
+  contactTypeSelect.dispatchEvent(new Event("change"));
+
+  // Manipulador para remover colaborador
+  document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("remove-button")) {
+      const id = event.target.closest("tr").dataset.id;
+      removeCollaborator(id);
+    }
+  });
+
+  // Inicialização da página
+  getWeekendDates();
+  loadCollaborators();
 
   // Theme switching logic
   const themeSwitch = document.getElementById("theme-switch");
@@ -217,39 +227,4 @@ document.addEventListener("DOMContentLoaded", function () {
       switchTheme();
     }
   }
-
-  // Inicialização do formulário de contato
-  const contactTypeSelect = document.getElementById("contact-type");
-  const contactInput = document.getElementById("contact");
-
-  contactTypeSelect.addEventListener("change", function () {
-    if (this.value === "phone") {
-      contactInput.setAttribute("type", "tel");
-      contactInput.removeAttribute("pattern");
-      contactInput.setAttribute("maxlength", "15"); // Máximo de 15 caracteres
-      contactInput.setAttribute("placeholder", "(XX) XXXXX-XXXX");
-      contactInput.removeEventListener("input", formatPhone);
-      contactInput.addEventListener("input", formatPhone);
-    } else {
-      contactInput.setAttribute("type", "email");
-      contactInput.removeAttribute("pattern");
-      contactInput.removeAttribute("maxlength");
-      contactInput.setAttribute("placeholder", "email@barceloscia.com.br");
-      contactInput.removeEventListener("input", formatPhone);
-    }
-  });
-
-  function formatPhone(event) {
-    let input = event.target.value.replace(/\D/g, "");
-    if (input.length <= 10) {
-      input = input.replace(/^(\d{2})(\d)/g, "($1) $2");
-      input = input.replace(/(\d{4})(\d)/, "$1-$2");
-    } else {
-      input = input.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-    }
-    event.target.value = input;
-  }
-
-  contactTypeSelect.value = "phone";
-  contactTypeSelect.dispatchEvent(new Event("change"));
 });

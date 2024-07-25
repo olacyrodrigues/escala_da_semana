@@ -2,57 +2,39 @@ const Collaborator = require("../models/collaborator");
 
 exports.createCollaborator = async (req, res) => {
   try {
-    const collaborator = await Collaborator.create(req.body);
-    res.status(201).json(collaborator);
+    const { sector, employee, contact, timeIn, timeOut, day } = req.body;
+    const newCollaborator = await Collaborator.create({
+      sector,
+      employee,
+      contact,
+      timeIn,
+      timeOut,
+      day,
+    });
+    res.json(newCollaborator);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erro ao criar colaborador.", error: error.message });
+    console.error("Erro ao criar colaborador:", error);
+    res.status(500).json({ error: "Erro ao criar colaborador." });
   }
 };
 
-exports.getCollaborators = async (req, res) => {
+exports.getAllCollaborators = async (req, res) => {
   try {
     const collaborators = await Collaborator.findAll();
-    res.status(200).json(collaborators);
+    res.json(collaborators);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erro ao buscar colaboradores.", error: error.message });
+    console.error("Erro ao buscar colaboradores:", error);
+    res.status(500).json({ error: "Erro ao buscar colaboradores." });
   }
 };
 
 exports.deleteCollaborator = async (req, res) => {
-  const { id } = req.params;
   try {
-    const collaborator = await Collaborator.findByPk(id);
-    if (!collaborator) {
-      return res.status(404).json({ message: "Colaborador não encontrado." });
-    }
-    await collaborator.destroy();
-    res.status(200).json({ message: "Colaborador removido com sucesso." });
+    const { id } = req.params;
+    await Collaborator.destroy({ where: { id } });
+    res.json({ message: "Colaborador removido com sucesso." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erro ao remover colaborador.", error: error.message });
-  }
-};
-
-exports.deleteOldCollaborators = async () => {
-  const now = new Date();
-  const lastMonday = new Date(
-    now.setDate(now.getDate() - now.getDay() + 1 - 7)
-  );
-  try {
-    await Collaborator.destroy({
-      where: {
-        createdAt: {
-          [Op.lt]: lastMonday,
-        },
-      },
-    });
-    console.log("Colaboradores antigos removidos com sucesso.");
-  } catch (error) {
-    console.error("Erro ao remover colaboradores antigos:", error.message);
+    console.error("Erro ao remover colaborador:", error);
+    res.status(500).json({ error: "Erro ao remover colaborador." });
   }
 };

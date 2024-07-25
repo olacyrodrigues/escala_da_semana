@@ -32,22 +32,24 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         data.forEach((user) => {
-          const newRow = `
-            <tr data-id="${user.id}">
-              <td>${user.sector}</td>
-              <td>${user.employee}</td>
-              <td>${user.contact}</td>
-              <td>${user.timeIn} às ${user.timeOut}</td>
-              <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
-            </tr>
-          `;
-          const tableId =
-            user.day === "saturday"
-              ? "#table-saturday tbody"
-              : "#table-sunday tbody";
-          document
-            .querySelector(tableId)
-            .insertAdjacentHTML("beforeend", newRow);
+          if (user.day === "saturday" || user.day === "sunday") {
+            const newRow = `
+              <tr data-id="${user.id}">
+                <td>${user.sector}</td>
+                <td>${user.employee}</td>
+                <td>${user.contact}</td>
+                <td>${user.timeIn} às ${user.timeOut}</td>
+                <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
+              </tr>
+            `;
+            const tableId =
+              user.day === "saturday"
+                ? "#table-saturday tbody"
+                : "#table-sunday tbody";
+            document
+              .querySelector(tableId)
+              .insertAdjacentHTML("beforeend", newRow);
+          }
         });
         checkTableActions("saturday");
         checkTableActions("sunday");
@@ -69,14 +71,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((newUser) => {
         const newRow = `
-        <tr data-id="${newUser.id}">
-          <td>${newUser.sector}</td>
-          <td>${newUser.employee}</td>
-          <td>${newUser.contact}</td>
-          <td>${newUser.timeIn} às ${newUser.timeOut}</td>
-          <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
-        </tr>
-      `;
+          <tr data-id="${newUser.id}">
+            <td>${newUser.sector}</td>
+            <td>${newUser.employee}</td>
+            <td>${newUser.contact}</td>
+            <td>${newUser.timeIn} às ${newUser.timeOut}</td>
+            <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
+          </tr>
+        `;
         const tableId =
           newUser.day === "saturday"
             ? "#table-saturday tbody"

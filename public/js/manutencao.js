@@ -23,10 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         data.forEach((user) => {
-          if (
-            user.sector === "Superior Manutenção" ||
-            user.sector === "Técnico Manutenção"
-          ) {
+          if (user.day === "week") {
             const newRow = `
               <tr data-id="${user.id}">
                 <td>${user.sector}</td>
@@ -60,14 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((newUser) => {
         const newRow = `
-        <tr data-id="${newUser.id}">
-          <td>${newUser.sector}</td>
-          <td>${newUser.employee}</td>
-          <td>${newUser.contact}</td>
-          <td>${newUser.timeIn} às ${newUser.timeOut}</td>
-          <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
-        </tr>
-      `;
+          <tr data-id="${newUser.id}">
+            <td>${newUser.sector}</td>
+            <td>${newUser.employee}</td>
+            <td>${newUser.contact}</td>
+            <td>${newUser.timeIn} às ${newUser.timeOut}</td>
+            <td class="actions-column"><button class="btn btn-danger btn-sm remove-button">Remover</button></td>
+          </tr>
+        `;
         document
           .querySelector("#table-week tbody")
           .insertAdjacentHTML("beforeend", newRow);

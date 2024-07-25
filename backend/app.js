@@ -1,66 +1,110 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const path = require("path");
 const session = require("express-session");
-const sequelize = require("./database"); // Certifique-se de usar o caminho correto aqui
-const userRoutes = require("./routes/userRoutes");
-const collaboratorRoutes = require("./routes/collaboratorRoutes");
+const sequelize = require("./database");
+const Collaborator = require("./models/collaborator");
+const User = require("./models/user");
 
 const app = express();
-app.use(cors());
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Configurar sessão
 app.use(
   session({
-    secret: "secret-key", // substitua por uma chave secreta real
+    secret: "secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Use secure: true em produção com HTTPS
   })
 );
 
-// Middleware para proteger rotas
-function authMiddleware(req, res, next) {
-  if (req.session && req.session.user) {
-    return next();
-  } else {
-    res.redirect("/login");
-  }
-}
-
-// Configuração das rotas da API
+// Rotas de usuário
+const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
+
+// Rotas de colaborador
+const collaboratorRoutes = require("./routes/collaboratorRoutes");
 app.use("/api/collaborators", collaboratorRoutes);
 
-// Rota básica para verificar se o servidor está funcionando
-app.get("/", (req, res) => {
-  res.send("Servidor está funcionando!");
+app.get("/api/users/all", async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error);
+    res.status(500).json({ error: "Erro ao buscar usuários." });
+  }
 });
 
-// Rotas para servir os arquivos HTML
-app.get("/administrativo", authMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/pages/administrativo.html"));
+app.get("/api/collaborators/all", async (req, res) => {
+  try {
+    const collaborators = await Collaborator.findAll();
+    res.json(collaborators);
+  } catch (error) {
+    console.error("Erro ao buscar colaboradores:", error);
+    res.status(500).json({ error: "Erro ao buscar colaboradores." });
+  }
 });
 
-app.get("/index", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/pages/index.html"));
+app.post("/api/collaborators/create", async (req, res) => {
+  try {
+    const { sector, employee, contact, timeIn, timeOut, day } = req.body;
+    const newCollaborator = await Collaborator.create({
+      sector,
+      employee,
+      contact,
+      timeIn,
+      timeOut,
+      day,
+    });
+    res.json(newCollaborator);
+  } catch (error) {
+    console.error("Erro ao criar colaborador:", error);
+    res.status(500).json({ error: "Erro ao criar colaborador." });
+  }
+});
+
+app.delete("/api/collaborators/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Collaborator.destroy({ where: { id } });
+    res.json({ message: "Colaborador removido com sucesso." });
+  } catch (error) {
+    console.error("Erro ao remover colaborador:", error);
+    res.status(500).json({ error: "Erro ao remover colaborador." });
+  }
 });
 
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/pages/login.html"));
 });
 
-app.get("/manutencao", authMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/pages/manutencao.html"));
+app.get("/index", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/pages/index.html"));
 });
 
-// Inicialização do servidor
+app.get("/administrativo", (req, res) => {
+  if (req.session.user) {
+    res.sendFile(path.join(__dirname, "../public/pages/administrativo.html"));
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.get("/manutencao", (req, res) => {
+  if (req.session.user) {
+    res.sendFile(path.join(__dirname, "../public/pages/manutencao.html"));
+  } else {
+    res.redirect("/login");
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+
 sequelize.sync().then(() => {
-  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
   });
 });

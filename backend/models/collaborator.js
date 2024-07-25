@@ -1,9 +1,9 @@
-const { Model, DataTypes } = require("sequelize");
+// backend/models/collaborator.js
+const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../database");
 
-class Collaborator extends Model {}
-
-Collaborator.init(
+const Collaborator = sequelize.define(
+  "Collaborator",
   {
     sector: {
       type: DataTypes.STRING,
@@ -31,8 +31,7 @@ Collaborator.init(
     },
   },
   {
-    sequelize,
-    modelName: "Collaborator",
+    timestamps: true,
   }
 );
 

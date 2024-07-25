@@ -9,4 +9,10 @@ router.delete("/delete", userController.deleteUser);
 router.get("/all", userController.getAllUsers);
 router.post("/logout", userController.logout);
 
+// backend/routes/userRoutes.js
+router.post("/reset-inactivity-timer", (req, res) => {
+  req.session.lastActivity = Date.now();
+  res.sendStatus(200);
+});
+
 module.exports = router;

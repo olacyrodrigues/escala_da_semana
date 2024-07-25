@@ -5,8 +5,35 @@ const session = require("express-session");
 const sequelize = require("./database");
 const Collaborator = require("./models/collaborator");
 const User = require("./models/user");
+const checkInactivity = require("./middlware/checkInactivity");
+const cron = require("node-cron");
 
 const app = express();
+
+const TWO_HOURS = 2 * 60 * 60 * 1000;
+
+// Configuração de sessão
+app.use(
+  session({
+    secret: "Inicie a sessão novamente.",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: TWO_HOURS },
+  })
+);
+
+// Middleware para verificar inatividade
+app.use(checkInactivity);
+
+// Limpar tabelas de colaboradores toda segunda-feira à meia-noite
+cron.schedule("0 0 * * 1", async () => {
+  try {
+    await Collaborator.destroy({ where: {} });
+    console.log("Tabelas de colaboradores limpas com sucesso.");
+  } catch (error) {
+    console.error("Erro ao limpar tabelas de colaboradores:", error);
+  }
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

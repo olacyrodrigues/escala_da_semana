@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function displayUsers(users) {
     const usersTable = document.getElementById("users-table");
     if (users.length === 0) {
-      usersTable.innerHTML = "<p>Nenhum colaborador registrado.</p>";
+      usersTable.innerHTML =
+        "<p>Nenhum colaborador registrado ainda para essa semana.</p>";
       return;
     }
     usersTable.innerHTML = `

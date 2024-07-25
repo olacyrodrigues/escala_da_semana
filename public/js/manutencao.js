@@ -208,4 +208,13 @@ document.addEventListener("DOMContentLoaded", function () {
       switchTheme();
     }
   }
+  function resetInactivityTimer() {
+    fetch("/api/reset-inactivity-timer", { method: "POST" });
+  }
+
+  // Eventos para resetar o timer de inatividade
+  window.addEventListener("mousemove", resetInactivityTimer);
+  window.addEventListener("keydown", resetInactivityTimer);
+  window.addEventListener("click", resetInactivityTimer);
+  window.addEventListener("scroll", resetInactivityTimer);
 });

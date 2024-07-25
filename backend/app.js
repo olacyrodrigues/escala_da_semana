@@ -4,9 +4,9 @@ const path = require("path");
 const session = require("express-session");
 const sequelize = require("./database");
 const Collaborator = require("./models/collaborator");
-const User = require("./models/user");
 const checkInactivity = require("./middlware/checkInactivity");
 const cron = require("node-cron");
+const User = require("./models/user");
 
 const app = express();
 

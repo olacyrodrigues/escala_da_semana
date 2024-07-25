@@ -1,5 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Carregar colaboradores ao carregar a página
+  // Função para calcular as datas de início e fim da semana
+  function getWeekDates() {
+    const today = new Date();
+    const startDate = new Date(today);
+    const endDate = new Date(today);
+
+    startDate.setDate(today.getDate() - today.getDay() + 1); // Set to the start of the week (Monday)
+    endDate.setDate(startDate.getDate() + 6); // Set to the end of the week (Sunday)
+
+    const options = { day: "2-digit", month: "2-digit", year: "2-digit" };
+    const startDateString = startDate.toLocaleDateString("pt-BR", options);
+    const endDateString = endDate.toLocaleDateString("pt-BR", options);
+
+    document.getElementById(
+      "week-dates"
+    ).textContent = `de ${startDateString} até ${endDateString}`;
+  }
+
+  // Função para carregar colaboradores
   function loadCollaborators() {
     fetch("/api/collaborators/all")
       .then((response) => response.json())
@@ -22,10 +40,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Função para exibir colaboradores na tabela
   function displayUsers(users) {
+    // Ordenar colaboradores priorizando os setores "Superior Manutenção" e "Técnico Manutenção", depois por setor em ordem alfabética e, em caso de setores iguais, pelo dia da escala
+    users.sort((a, b) => {
+      const prioritySectors = ["Superior Manutenção", "Técnico Manutenção"];
+      if (
+        prioritySectors.includes(a.sector) &&
+        !prioritySectors.includes(b.sector)
+      ) {
+        return -1;
+      } else if (
+        !prioritySectors.includes(a.sector) &&
+        prioritySectors.includes(b.sector)
+      ) {
+        return 1;
+      } else if (a.sector.localeCompare(b.sector) !== 0) {
+        return a.sector.localeCompare(b.sector);
+      } else {
+        return a.day.localeCompare(b.day);
+      }
+    });
+
     const usersTable = document.getElementById("users-table");
     if (users.length === 0) {
-      usersTable.innerHTML =
-        "<p>Nenhum colaborador registrado ainda para essa semana.</p>";
+      usersTable.innerHTML = "<p>Nenhum colaborador registrado.</p>";
       return;
     }
     usersTable.innerHTML = `
@@ -49,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <td>${user.contact}</td>
               <td>${
                 user.day === "week"
-                  ? `De ${getWeekDates()}`
+                  ? document.getElementById("week-dates").textContent
                   : translateDay(user.day)
               }</td>
               <td>${user.timeIn} às ${user.timeOut}</td>
@@ -62,23 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   }
 
-  // Função para calcular as datas de início e fim da semana
-  function getWeekDates() {
-    const today = new Date();
-    const startDate = new Date(today);
-    const endDate = new Date(today);
-
-    startDate.setDate(today.getDate() - today.getDay() + 1); // Set to the start of the week (Monday)
-    endDate.setDate(startDate.getDate() + 6); // Set to the end of the week (Sunday)
-
-    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
-    const startDateString = startDate.toLocaleDateString("pt-BR", options);
-    const endDateString = endDate.toLocaleDateString("pt-BR", options);
-
-    return `${startDateString} até ${endDateString}`;
-  }
-
   // Carregar e exibir os colaboradores
+  getWeekDates();
   loadCollaborators();
 
   // Theme switching logic

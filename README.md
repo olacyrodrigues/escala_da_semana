@@ -44,29 +44,35 @@ Inicie o servidor
   node app.js
 ```
 
+Acesse
+
+```bash
+  http://localhost:3000/index
+```
+
 ## Documentação da API
 
 #### registrar usuários
 
-```http
+```bash
   POST / http://localhost:3000/api/users/create
 ```
 
 #### alterar usuários
 
-```http
+```bash
   PUT / http://localhost:3000/api/users/update
 ```
 
 #### deletar usuários
 
-```http
+```bash
   DELETE / http://localhost:3000/api/users/delete
 ```
 
 #### mostrar todos usuários registrados
 
-```http
+```bash
   GET http://localhost:3000/api/users/all
 ```
 

@@ -38,6 +38,12 @@ Entre no diretório do backend
   cd backend
 ```
 
+Faça a instalação das dependências
+
+```bash
+  npm i
+```
+
 Inicie o servidor
 
 ```bash

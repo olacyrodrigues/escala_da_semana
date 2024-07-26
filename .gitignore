@@ -6,4 +6,4 @@ database.sqlite
 
 # Ignorar arquivos de ambiente
 .env
-/node_modules
+node_modules

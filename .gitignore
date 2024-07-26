@@ -1,0 +1,8 @@
+# Ignorar o arquivo de banco de dados SQLite
+database.sqlite
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de ambiente
+.env

@@ -10,15 +10,13 @@ const User = require("./models/user");
 
 const app = express();
 
-const TWO_HOURS = 2 * 60 * 60 * 1000;
-
 // Configuração de sessão
 app.use(
   session({
-    secret: "Inicie a sessão novamente.",
+    secret: "secret-key",
     resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: TWO_HOURS },
+    saveUninitialized: true,
+    cookie: { maxAge: 20 * 60 * 1000 }, // 20 minutos
   })
 );
 

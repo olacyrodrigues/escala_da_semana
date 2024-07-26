@@ -20,10 +20,12 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     const sundayDateString = nextSunday.toLocaleDateString("pt-BR", options);
 
-    document.getElementById(
-      "saturday-date"
-    ).textContent = ` ${saturdayDateString}`;
-    document.getElementById("sunday-date").textContent = ` ${sundayDateString}`;
+    document.getElementById("saturday-date").textContent = ` ${
+      saturdayDateString.charAt(0).toUpperCase() + saturdayDateString.slice(1)
+    }`;
+    document.getElementById("sunday-date").textContent = ` ${
+      sundayDateString.charAt(0).toUpperCase() + sundayDateString.slice(1)
+    }`;
   }
 
   // Carregar colaboradores ao carregar a página
